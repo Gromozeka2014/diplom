@@ -4,6 +4,7 @@ from pymongo import MongoClient
 
 
 def parse_group_member_ids(group_id):
+    ip = 'test'
     api = vk_requests.create_api(service_token=const.token)
     ids = api.groups.getMembers(group_id=group_id, count=1000)
     ids = ids['items']
