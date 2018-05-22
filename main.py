@@ -19,7 +19,7 @@ def parse_users_data():
         if 'deactivated' in user_data:
             print('пользователь ', user_data['id'], ' удален или забанен.')
         else:
-            print(user_data['id'], 'добавлен')
+            print(user_data['id'], 'добавлен.')
             db_save_users_data(user_data)
 
 
@@ -85,12 +85,12 @@ def main():
         with open('users_id.txt', 'w') as f:
             for line in filtered:
                 f.write(str(line) + '\n')
-        print('id пользователей из указанных групп собраны')
+        print('id пользователей из указанных групп собраны.')
         main()
     elif ans in const.Use_Users_id:
         parse_users_data()
     else:
-        print("Некорректный запрос")
+        print("Некорректный запрос.")
         main()
 
 if __name__ == '__main__':
