@@ -35,11 +35,10 @@ def db_save_users_data(user_data):
     client = MongoClient()
     db = client['test']
     coll = db['users']
-    if 'id' in user_data:
-        user_id = user_data.pop('id')
-        coll.save({"_id": user_id})
-        dict_update(user_data)
-        coll.update({"_id": user_id}, user_data)
+    user_id = user_data.pop('id')
+    coll.save({"_id": user_id})
+    dict_update(user_data)
+    coll.update({"_id": user_id}, user_data)
 
 
 def dict_update(data_dict):
