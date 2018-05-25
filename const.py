@@ -1,5 +1,3 @@
-token = "3091d3073091d3073091d3074930f30813330913091d3076a68afd1bbb6e5bc6b8c9bde"
-
 parsed_info = ['sex', 'city', 'country', 'bdate', 'books', 'contacts', 'education', 'interests', 'movies', 'music',
                'personal', 'relation']
 
@@ -8,6 +6,7 @@ useless_info = ['university', 'faculty']
 home_title = ['city', 'country']
 Use_Users_id = ['U', 'u']
 Use_Group_id = ['G', 'g']
+Use_test_id = ['1']
 sex_id = {0: 'пол не указан', 1: 'женский', 2: 'мужской'}
 
 relation_id = {1: 'не женат/не замужем', 2: 'есть друг/есть подруга', 3: 'помолвлен/помолвлена', 4: 'женат/замужем',
