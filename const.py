@@ -6,7 +6,6 @@ useless_info = ['university', 'faculty']
 home_title = ['city', 'country']
 Use_Users_id = ['U', 'u']
 Use_Group_id = ['G', 'g']
-Use_test_id = ['1']
 sex_id = {0: 'пол не указан', 1: 'женский', 2: 'мужской'}
 
 relation_id = {1: 'не женат/не замужем', 2: 'есть друг/есть подруга', 3: 'помолвлен/помолвлена', 4: 'женат/замужем',

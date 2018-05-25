@@ -6,18 +6,16 @@ from pymongo import MongoClient
 
 
 def parse_group_member_ids(group_id):
-    conf = pars_conf()
-    token = conf.get('app', 'token')
-    api = vk_requests.create_api(service_token=token)
+    conf = pars_secure_config()
+    api = vk_requests.create_api(service_token=conf.get('app', 'token'))
     ids = api.groups.getMembers(group_id=group_id, count=1000)
     ids = ids['items']
     return ids
 
 
 def parse_users_data():
-    conf = pars_conf()
-    token = conf.get('app', 'token')
-    api = vk_requests.create_api(service_token=token)
+    conf = pars_secure_config()
+    api = vk_requests.create_api(service_token=conf.get('app', 'token'))
     users_list = read_id('users_id.txt')
     new_users_list = []
     try:
@@ -38,8 +36,8 @@ def parse_users_data():
         time.sleep(1)
 
 
-def posts():
-    conf = pars_conf()
+def pars_users_posts():
+    conf = pars_secure_config()
     login = conf.get('account', 'login')
     password = conf.get('account', 'password')
     api_id = conf.get('account', 'api_id')
@@ -64,7 +62,7 @@ def db_save_users_data(user_data):
     coll.update({"_id": user_id}, user_data)
 
 
-def pars_conf():
+def pars_secure_config():
     conf = configparser.RawConfigParser()
     conf.read('config.cfg')
     return conf
@@ -108,8 +106,8 @@ def dict_update(data_dict):
 
 
 def main():
-    ans = input("Производить сбор информации по Users или собрать id пользователей из Groups?   U | G     : ")
-    if ans in const.Use_Group_id:
+    answer = input("Производить сбор информации по Users или собрать id пользователей из Groups?   U | G     : ")
+    if answer in const.Use_Group_id:
         group_list = read_id('group_id.txt')
         parsed = []
         filtered = []
@@ -123,10 +121,10 @@ def main():
                 f.write(str(line) + '\n')
         print('id пользователей из указанных групп собраны.')
         main()
-    elif ans in const.Use_Users_id:
+    elif answer in const.Use_Users_id:
         start_time = time.time()
         parse_users_data()
-        posts()
+        pars_users_posts()
         print("--- %s seconds ---" % (time.time() - start_time))
     else:
         print("Некорректный запрос.")
