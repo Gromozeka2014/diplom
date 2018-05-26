@@ -2,6 +2,7 @@ import const
 import configparser
 import vk_requests
 import time
+import datetime
 from pymongo import MongoClient
 
 
@@ -46,7 +47,8 @@ def pars_users_posts():
     for user in new_users_list:
         try:
             parsed = api.wall.get(owner_id=user, count=2)
-            print(parsed)
+            for post in parsed['items']:
+                db_save_users_posts(post)
         except Exception as e:
             print(e)
             time.sleep(1)
@@ -60,6 +62,18 @@ def db_save_users_data(user_data):
     coll.save({"_id": user_id})
     dict_update(user_data)
     coll.update({"_id": user_id}, user_data)
+
+
+def db_save_users_posts(post):
+    client = MongoClient()
+    db = client['test']
+    coll = db['posts']
+    text = post.pop('text')
+    if text != "":
+        post_id = post.pop('id')
+        owner_id = post.pop('owner_id')
+        date = datetime.datetime.fromtimestamp(post.pop('date')).strftime('%Y-%m-%d %H:%M:%S')
+        coll.save({"_id": post_id, "owner_id": owner_id, "date": date, "text": text})
 
 
 def pars_secure_config():
