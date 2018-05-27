@@ -27,8 +27,8 @@ def parse_users_data():
             if 'deactivated' in user_data:
                 print('пользователь ', user_data['id'], ' удален или забанен.')
             else:
-                db_save_users_data(user_data)
                 print(user_data['id'], 'добавлен.')
+                db_save_users_data(user_data)
                 new_users_list.append(user)
     except Exception as e:
         print(e)
@@ -46,14 +46,18 @@ def pars_users_posts():
     api = vk_requests.create_api(app_id=api_id, login=login, password=password)
     new_users_list = read_id('users_id.txt')
     for user in new_users_list:
-        try:
-            parsed = api.wall.get(owner_id=user, count=2)
-            for post in parsed['items']:
-                db_save_users_posts(post)
-                print(post[id], "добавлен.")
-        except Exception as e:
-            print(e)
-            time.sleep(1)
+            try:
+                parsed = api.wall.get(owner_id=user, count=2)
+                for post in parsed['items']:
+                    print(post['id'], "добавлен.")
+                    db_save_users_posts(post)
+            except Exception as e:
+                print(e)
+                time.sleep(1)
+                parsed = api.wall.get(owner_id=user, count=2)
+                for post in parsed['items']:
+                    print(post['id'], "добавлен.")
+                    db_save_users_posts(post)
 
 
 def db_save_users_data(user_data):
@@ -75,7 +79,7 @@ def db_save_users_posts(post):
         post_id = post.pop('id')
         owner_id = post.pop('owner_id')
         date = datetime.datetime.fromtimestamp(post.pop('date')).strftime('%Y-%m-%d %H:%M:%S')
-        coll.save({"_id": post_id, "owner_id": owner_id, "date": date, "text": text})
+        coll.save({"id": post_id, "owner_id": owner_id, "date": date, "text": text})
 
 
 def pars_secure_config():
