@@ -43,23 +43,35 @@ def request_for_user(api, users_list, new_users_list):
 
 
 def parse_users_posts():
+    n = -1
     conf = file_handler.pars_secure_config()
     login = conf.get('account', 'login')
     password = conf.get('account', 'password')
     api_id = conf.get('account', 'api_id')
     api = vk_requests.create_api(app_id=api_id, login=login, password=password)
     new_users_list = file_handler.read_id('users_id.txt')
+    while type(n) is not int or n < 0 or n > 100:
+        n = count_test()
     for user in new_users_list:
             try:
-                request_for_posts(api, user)
+                request_for_posts(api, user, n)
             except Exception as e:
                 print(e)
                 time.sleep(1)
-                request_for_posts(api, user)
+                request_for_posts(api, user, n)
 
 
-def request_for_posts(api, user):
-    parsed = api.wall.get(owner_id=user, count=2)
+def request_for_posts(api, user, n):
+    parsed = api.wall.get(owner_id=user, count=n)
     for post in parsed['items']:
         print(post['id'], "добавлен.")
         db_handler.db_save_users_posts(post)
+
+
+def count_test():
+    try:
+        n = input("Введите количество обрабатываемых постов для одного пользователя (не более 100): ")
+        n = int(n)
+        return n
+    except Exception as e:
+        print(e)
