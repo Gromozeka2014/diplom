@@ -9,9 +9,14 @@ import time
 def parse_group_member_ids(group_id):
     conf = file_handler.pars_secure_config()
     api = vk_requests.create_api(service_token=conf.get('app', 'token'))
-    ids = api.groups.getMembers(group_id=group_id, count=1000)
-    ids = ids['items']
-    return ids
+    count = api.groups.getMembers(group_id=group_id, count=0)
+    count = count['count']
+    count_n = (count // 1000)
+    ids_list = []
+    for i in range(count_n + 1):
+        ids = api.groups.getMembers(group_id=group_id, count=1000, offset=1000*i)
+        ids_list = ids_list + ids['items']
+    return ids_list
 
 
 def parse_users_data():
