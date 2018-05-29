@@ -3,7 +3,7 @@ import configparser
 
 def read_id(sours):
     id_list = []
-    with open(sours, 'r') as f:
+    with open(sours, 'r', encoding='utf8') as f:
         for line in f:
             id_list.append(line.strip())
     return id_list

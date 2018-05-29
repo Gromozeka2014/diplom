@@ -1,7 +1,6 @@
 import file_handler
 import db_handler
 import const
-import wall_search
 
 import vk_requests
 import time
@@ -93,8 +92,11 @@ def request_for_posts_count(api, user, n):
 
 def request_for_posts_dict(api, user):
     search = ''
-    for word in wall_search.dictionary:
-        search = search + word
+    words = file_handler.read_id('support_files/keywords.txt')
+    print(words)
+    for word in words:
+        search = search + ' ' + word
+    print(search)
     parsed = api.wall.search(owner_id=user, query=search)
     for post in parsed['items']:
         print(post['id'], "добавлен.")
