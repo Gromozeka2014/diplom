@@ -11,5 +11,5 @@ def read_id(sours):
 
 def pars_secure_config():
     conf = configparser.RawConfigParser()
-    conf.read('config.cfg')
+    conf.read('support_files/config.cfg')
     return conf

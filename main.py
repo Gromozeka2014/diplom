@@ -12,7 +12,7 @@ def main():
         menu_pars = input("Для запуска сбора информации по списку пользователей, введите 'U'\n"
                           "Для запуска сбора информации о пользователях из списка групп, введите 'G'\n")
         if menu_pars.upper() == "G":
-            group_list = file_handler.read_id('group_id.txt')
+            group_list = file_handler.read_id('support_files/group_id.txt')
             parsed = []
             filtered = []
             for group in group_list:
@@ -20,7 +20,7 @@ def main():
             for user in parsed:
                 if user not in filtered:
                     filtered.append(user)
-            with open('users_id.txt', 'w') as f:
+            with open('support_files/users_id.txt', 'w') as f:
                 for line in filtered:
                     f.write(str(line) + '\n')
             print('id пользователей из указанных групп собраны.')
