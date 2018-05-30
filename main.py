@@ -4,6 +4,8 @@ import db_handler
 
 import os
 from tkinter import *
+from tkinter import messagebox as mb
+from tkinter import filedialog as fd
 from tkinter.ttk import *
 
 
@@ -50,15 +52,44 @@ def main():
         text.insert(1.0, "Импорт запущен!\n")
 
     def db_data_remove():
-        db_handler.db_data_remove()
-        text.insert(1.0, "Данные удалены!\n")
+        answer = mb.askyesno(title="Вы уверены???", message="Удалить все данные из БД???")
+        if answer is True:
+            db_handler.db_data_remove()
+            text.insert(1.0, "Данные удалены!\n")
+
+    def insert_text():
+        try:
+            file_name = fd.askopenfilename()
+            f = open(file_name)
+            fa = f.read()
+            text.insert(1.0, fa)
+            f.close()
+        except Exception as e:
+            print(e)
+
+    def extract_text():
+        try:
+            file_name = fd.asksaveasfilename(filetypes=(("TXT files", "*.txt"),
+                                                        ("CFG files", "*.cfg"),
+                                                        ("All files", "*.*")))
+            f = open(file_name, 'w')
+            fa = text.get(1.0, END)
+            f.write(fa)
+            f.close()
+        except Exception as e:
+            print(e)
+
+    def clr_text():
+        answer = mb.askyesno(title="Вы уверены???", message="Удалить все данные из окна ввода???")
+        if answer is True:
+            text.delete('1.0', END)
 
     root = Tk()
 
     s = Style()
     s.configure('My.TFrame', background='silver')
     root.title("Приложения для сбора и обработки данных пользователей ВКонтакте")
-    root.geometry("600x360")
+    root.geometry("600x400")
 
     frame1 = Frame(style='My.TFrame', borderwidth=1)
     frame1.pack(fill=BOTH)
@@ -79,7 +110,7 @@ def main():
     n = IntVar()
     posts_parser_count_btn = Button(frame3, text="Сбор последних N постов", command=pars_posts_n)
     posts_parser_count_btn.pack(side=LEFT, padx=5, pady=5)
-    entry_count = Entry(frame3, textvariable=n)
+    entry_count = Entry(frame3, textvariable=n, width=5)
     entry_count.pack(side=LEFT, padx=5, pady=5)
     import_db_manager_btn = Button(frame3, text="Импорт БД", command=import_db)
     import_db_manager_btn.pack(side=RIGHT, padx=5, pady=5)
@@ -92,8 +123,19 @@ def main():
     db_data_remove_btn.pack(side=RIGHT, padx=5, pady=5)
 
     frame5 = Frame(style='My.TFrame', borderwidth=1)
-    frame5.pack(fill=BOTH, expand=True)
-    text = Text(frame5, width=74, height=13, wrap=WORD)
+    frame5.pack(fill=BOTH)
+    open_file_btn = Button(frame5, text="Открыть", command=insert_text)
+    open_file_btn.pack(side=RIGHT, padx=5, pady=5)
+    save_file_btn = Button(frame5, text="Сохранить", command=extract_text)
+    save_file_btn.pack(side=RIGHT, padx=5, pady=5)
+    clr_text_btn = Button(frame5, text="Очистить", command=clr_text)
+    clr_text_btn.pack(side=RIGHT, padx=5, pady=5)
+    info = Label(frame5, text="Поле ввода, вывода и редактирования:", font="8")
+    info.pack(side=LEFT, padx=5, pady=5)
+
+    frame6 = Frame(style='My.TFrame', borderwidth=1)
+    frame6.pack(fill=BOTH, expand=True)
+    text = Text(frame6, width=74, height=13, wrap=WORD)
     text.pack(side="left", fill="both", expand=True)
     root.mainloop()
 
