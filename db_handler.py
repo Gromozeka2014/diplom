@@ -66,3 +66,12 @@ def db_save_users_posts(post):
         date = datetime.datetime.fromtimestamp(post.pop('date')).strftime('%Y-%m-%d %H:%M:%S')
         copy_text = re.sub('[\n]', '', copy_text)
         coll.save({"id": post_id, "owner_id": owner_id, "date": date, "text": text, "copy_text": copy_text})
+
+
+def db_data_remove():
+    client = MongoClient()
+    db = client['test']
+    coll = db['users']
+    coll.remove({})
+    coll = db['posts']
+    coll.remove({})

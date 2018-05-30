@@ -8,7 +8,7 @@ import time
 
 def parse_group_member_ids(group_id):
     conf = file_handler.pars_secure_config()
-    api = vk_requests.create_api(service_token=conf.get('app', 'token'))
+    api = vk_requests.create_api(service_token=conf.get('app', 'token'), interactive=True)
     count = api.groups.getMembers(group_id=group_id, count=0)
     count = count['count']
     count_n = (count // 1000)
@@ -21,7 +21,7 @@ def parse_group_member_ids(group_id):
 
 def parse_users_data():
     conf = file_handler.pars_secure_config()
-    api = vk_requests.create_api(service_token=conf.get('app', 'token'))
+    api = vk_requests.create_api(service_token=conf.get('app', 'token'), interactive=True)
     users_list = file_handler.read_id('support_files/users_id.txt')
     new_users_list = []
     try:
@@ -58,9 +58,13 @@ def parse_users_posts_count(n):
         try:
             request_for_posts_count(api, user, n)
         except Exception as e:
-            print(e)
-            time.sleep(1)
-            request_for_posts_count(api, user, n)
+            if "error_code=18" in e.__str__():
+                print(e)
+            elif "error_code=6" in e.__str__():
+                time.sleep(1)
+                request_for_posts_count(api, user, n)
+            else:
+                print(e)
 
 
 def parse_users_posts_dict():
@@ -80,7 +84,7 @@ def pars_posts_api_init():
     login = conf.get('account', 'login')
     password = conf.get('account', 'password')
     api_id = conf.get('account', 'api_id')
-    api = vk_requests.create_api(app_id=api_id, login=login, password=password)
+    api = vk_requests.create_api(app_id=api_id, login=login, password=password, interactive=True)
     return api
 
 
