@@ -47,57 +47,56 @@ def request_for_user(api, users_list, new_users_list):
             new_users_list.append(user)
 
 
-def parse_users_posts():
-    n = -1
+def parse_users_posts_count(n):
+    api = pars_posts_api_init()
+    new_users_list = file_handler.read_id('support_files/users_id.txt')
+    try:
+        n = int(n)
+    except Exception as e:
+        return print(e)
+    for user in new_users_list:
+        try:
+            request_for_posts_count(api, user, n)
+        except Exception as e:
+            print(e)
+            time.sleep(1)
+            request_for_posts_count(api, user, n)
+
+
+def parse_users_posts_dict():
+    api = pars_posts_api_init()
+    new_users_list = file_handler.read_id('support_files/users_id.txt')
+    for user in new_users_list:
+        try:
+            request_for_posts_dict(api, user)
+        except Exception as e:
+            print(e)
+            time.sleep(1)
+            request_for_posts_dict(api, user)
+
+
+def pars_posts_api_init():
     conf = file_handler.pars_secure_config()
     login = conf.get('account', 'login')
     password = conf.get('account', 'password')
     api_id = conf.get('account', 'api_id')
     api = vk_requests.create_api(app_id=api_id, login=login, password=password)
-    new_users_list = file_handler.read_id('support_files/users_id.txt')
-    post_pars_menu = input("Для сбора последних постов пользователя в количестве N, введите 'N'\n"
-                           "Для сбора постов по ключевым словам, введите 'D'\n")
-    if post_pars_menu.upper() == 'N':
-        while type(n) is not int or n < 0 or n > 100:
-            try:
-                n = input("Введите количество обрабатываемых постов для одного пользователя (не более 100): ")
-                n = int(n)
-            except Exception as e:
-                print(e)
-        for user in new_users_list:
-                try:
-                    request_for_posts_count(api, user, n)
-                except Exception as e:
-                    print(e)
-                    time.sleep(1)
-                    request_for_posts_count(api, user, n)
-    elif post_pars_menu.upper() == 'D':
-        for user in new_users_list:
-                try:
-                    request_for_posts_dict(api, user)
-                except Exception as e:
-                    print(e)
-                    time.sleep(1)
-                    request_for_posts_dict(api, user)
-    else:
-        print("Некорректный запрос.")
+    return api
 
 
 def request_for_posts_count(api, user, n):
     parsed = api.wall.get(owner_id=user, count=n)
     for post in parsed['items']:
-        print(post['id'], "добавлен.")
+        print(post['id'], "Обработан.")
         db_handler.db_save_users_posts(post)
 
 
 def request_for_posts_dict(api, user):
     search = ''
     words = file_handler.read_id('support_files/keywords.txt')
-    print(words)
     for word in words:
         search = search + ' ' + word
-    print(search)
     parsed = api.wall.search(owner_id=user, query=search)
     for post in parsed['items']:
-        print(post['id'], "добавлен.")
+        print(post['id'], "Обработан.")
         db_handler.db_save_users_posts(post)

@@ -1,4 +1,5 @@
 import const
+import re
 
 from pymongo import MongoClient
 import datetime
@@ -48,8 +49,20 @@ def db_save_users_posts(post):
     db = client['test']
     coll = db['posts']
     text = post.pop('text')
+    copy_text = ""
+    if 'copy_history' in post:
+        copy_history = post.pop('copy_history')
+        copy_history = copy_history[0]
+        copy_text = copy_history['text']
     if text != "":
         post_id = post.pop('id')
         owner_id = post.pop('owner_id')
         date = datetime.datetime.fromtimestamp(post.pop('date')).strftime('%Y-%m-%d %H:%M:%S')
+        text = re.sub('[\n]', '', text)
         coll.save({"id": post_id, "owner_id": owner_id, "date": date, "text": text})
+    elif text == "" and copy_text != "":
+        post_id = post.pop('id')
+        owner_id = post.pop('owner_id')
+        date = datetime.datetime.fromtimestamp(post.pop('date')).strftime('%Y-%m-%d %H:%M:%S')
+        copy_text = re.sub('[\n]', '', copy_text)
+        coll.save({"id": post_id, "owner_id": owner_id, "date": date, "text": text, "copy_text": copy_text})
