@@ -3,6 +3,7 @@ import parsers
 import db_handler
 
 import os
+from pymongo import MongoClient
 from tkinter import *
 from tkinter import messagebox as mb
 from tkinter import filedialog as fd
@@ -82,7 +83,30 @@ def main():
     def clr_text():
         answer = mb.askyesno(title="Вы уверены???", message="Удалить все данные из окна ввода???")
         if answer is True:
-            text.delete('1.0', END)
+            text.delete(1.0, END)
+
+    def db_find_users():
+        client = MongoClient()
+        db = client['test']
+        coll = db['users']
+        for user in coll.find({}):
+            text.insert(1.0, user)
+            text.insert(1.0, '\n\n')
+        text.insert(1.0, coll.find({}).count())
+        text.insert(1.0, "Количество профилей в колекции users: ")
+
+    def db_find_posts():
+        client = MongoClient()
+        db = client['test']
+        coll = db['posts']
+        for post in coll.find({}):
+            try:
+                text.insert(1.0, post)
+                text.insert(1.0, '\n\n')
+            except Exception as e:
+                print(e)
+        text.insert(1.0, coll.find({}).count())
+        text.insert(1.0, "Количество постов в колекции posts: ")
 
     root = Tk()
 
@@ -121,6 +145,10 @@ def main():
     posts_parser_dict_btn.pack(side=LEFT, padx=5, pady=5)
     db_data_remove_btn = Button(frame4, text="Отчистить БД", command=db_data_remove)
     db_data_remove_btn.pack(side=RIGHT, padx=5, pady=5)
+    db_find_users_btn = Button(frame4, text="Вывод Users", command=db_find_users)
+    db_find_users_btn.pack(side=RIGHT, padx=5, pady=5)
+    db_find_posts_btn = Button(frame4, text="Вывод Posts", command=db_find_posts)
+    db_find_posts_btn.pack(side=RIGHT, padx=5, pady=5)
 
     frame5 = Frame(style='My.TFrame', borderwidth=1)
     frame5.pack(fill=BOTH)
