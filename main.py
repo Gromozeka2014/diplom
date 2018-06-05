@@ -48,9 +48,9 @@ def main():
         os.system('db_manager.bat')
         text.insert(1.0, "Менеджер запущен!\n")
 
-    def import_db():
+    def export_db():
         os.startfile('db_export.bat')
-        text.insert(1.0, "Импорт запущен!\n")
+        text.insert(1.0, "Экспорт запущен!\n")
 
     def db_data_remove():
         answer = mb.askyesno(title="Вы уверены???", message="Удалить все данные из БД???")
@@ -136,7 +136,7 @@ def main():
     posts_parser_count_btn.pack(side=LEFT, padx=5, pady=5)
     entry_count = Entry(frame3, textvariable=n, width=5)
     entry_count.pack(side=LEFT, padx=5, pady=5)
-    import_db_manager_btn = Button(frame3, text="Импорт БД", command=import_db)
+    import_db_manager_btn = Button(frame3, text="Экспорт БД", command=export_db)
     import_db_manager_btn.pack(side=RIGHT, padx=5, pady=5)
 
     frame4 = Frame(borderwidth=1)
