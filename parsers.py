@@ -67,16 +67,11 @@ def parse_users_posts_count(n):
                 print(e)
 
 
-def parse_users_posts_dict():
-    api = pars_posts_api_init()
-    new_users_list = file_handler.read_file('support_files/users_id.txt')
-    for user in new_users_list:
-        try:
-            request_for_posts_dict(api, user)
-        except Exception as e:
-            print(e)
-            time.sleep(1)
-            request_for_posts_dict(api, user)
+def request_for_posts_count(api, user, n):
+    parsed = api.wall.get(owner_id=user, count=n)
+    for post in parsed['items']:
+        print(post['id'], "Обработан.")
+        db_handler.db_save_users_posts(post)
 
 
 def pars_posts_api_init():
@@ -88,11 +83,16 @@ def pars_posts_api_init():
     return api
 
 
-def request_for_posts_count(api, user, n):
-    parsed = api.wall.get(owner_id=user, count=n)
-    for post in parsed['items']:
-        print(post['id'], "Обработан.")
-        db_handler.db_save_users_posts(post)
+def parse_users_posts_dict():
+    api = pars_posts_api_init()
+    new_users_list = file_handler.read_file('support_files/users_id.txt')
+    for user in new_users_list:
+        try:
+            request_for_posts_dict(api, user)
+        except Exception as e:
+            print(e)
+            time.sleep(1)
+            request_for_posts_dict(api, user)
 
 
 def request_for_posts_dict(api, user):
