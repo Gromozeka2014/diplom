@@ -1,7 +1,7 @@
 import configparser
 
 
-def read_id(sours):
+def read_file(sours):
     id_list = []
     with open(sours, 'r', encoding='utf8') as f:
         for line in f:

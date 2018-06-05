@@ -22,7 +22,7 @@ def parse_group_member_ids(group_id):
 def parse_users_data():
     conf = file_handler.pars_secure_config()
     api = vk_requests.create_api(service_token=conf.get('app', 'token'), interactive=True)
-    users_list = file_handler.read_id('support_files/users_id.txt')
+    users_list = file_handler.read_file('support_files/users_id.txt')
     new_users_list = []
     try:
         request_for_user(api, users_list, new_users_list)
@@ -49,7 +49,7 @@ def request_for_user(api, users_list, new_users_list):
 
 def parse_users_posts_count(n):
     api = pars_posts_api_init()
-    new_users_list = file_handler.read_id('support_files/users_id.txt')
+    new_users_list = file_handler.read_file('support_files/users_id.txt')
     try:
         n = int(n)
     except Exception as e:
@@ -69,7 +69,7 @@ def parse_users_posts_count(n):
 
 def parse_users_posts_dict():
     api = pars_posts_api_init()
-    new_users_list = file_handler.read_id('support_files/users_id.txt')
+    new_users_list = file_handler.read_file('support_files/users_id.txt')
     for user in new_users_list:
         try:
             request_for_posts_dict(api, user)
@@ -97,7 +97,7 @@ def request_for_posts_count(api, user, n):
 
 def request_for_posts_dict(api, user):
     search = ''
-    words = file_handler.read_id('support_files/keywords.txt')
+    words = file_handler.read_file('support_files/keywords.txt')
     for word in words:
         search = search + ' ' + word
     parsed = api.wall.search(owner_id=user, query=search)

@@ -12,7 +12,7 @@ from tkinter.ttk import *
 
 def main():
     def pars_id_group():
-        group_list = file_handler.read_id('support_files/group_id.txt')
+        group_list = file_handler.read_file('support_files/group_id.txt')
         parsed = []
         filtered = []
         for group in group_list:
@@ -49,7 +49,7 @@ def main():
         text.insert(1.0, "Менеджер запущен!\n")
 
     def import_db():
-        os.startfile('db_import.bat')
+        os.startfile('db_export.bat')
         text.insert(1.0, "Импорт запущен!\n")
 
     def db_data_remove():
