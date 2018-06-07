@@ -16,6 +16,7 @@ def db_save_users_data(user_data):
 
 
 def dict_update(data_dict):
+    personal_dict = {}
     for home in const.home_title:
         if home in data_dict:
             data_dict.update({home: data_dict[home]['title']})
@@ -23,16 +24,20 @@ def dict_update(data_dict):
         data_dict.update({'sex': const.sex_id[data_dict['sex']]})
     if 'relation' in data_dict:
         data_dict.update({'relation': const.relation_id[data_dict['relation']]})
-    if 'personal' in data_dict and 'political' in data_dict['personal']:
-        data_dict['personal'].update({'political': const.political_id[data_dict['personal']['political']]})
-    if 'personal' in data_dict and 'people_main' in data_dict['personal']:
-        data_dict['personal'].update({'people_main': const.people_main_id[data_dict['personal']['people_main']]})
-    if 'personal' in data_dict and 'life_main' in data_dict['personal']:
-        data_dict['personal'].update({'life_main': const.life_main_id[data_dict['personal']['life_main']]})
-    if 'personal' in data_dict and 'smoking' in data_dict['personal']:
-        data_dict['personal'].update({'smoking': const.smoking_alcohol_id[data_dict['personal']['smoking']]})
-    if 'personal' in data_dict and 'alcohol' in data_dict['personal']:
-        data_dict['personal'].update({'alcohol': const.smoking_alcohol_id[data_dict['personal']['alcohol']]})
+    if 'personal' in data_dict:
+        personal_dict = data_dict.pop('personal')
+    if 'political' in personal_dict:
+        data_dict.update({'political': const.political_id[personal_dict['political']]})
+    if 'religion' in personal_dict:
+        data_dict.update({'religion': personal_dict['religion']})
+    if 'people_main' in personal_dict:
+        data_dict.update({'people_main': const.people_main_id[personal_dict['people_main']]})
+    if 'life_main' in personal_dict:
+        data_dict.update({'life_main': const.life_main_id[personal_dict['life_main']]})
+    if 'smoking' in personal_dict:
+        data_dict.update({'smoking': const.smoking_alcohol_id[personal_dict['smoking']]})
+    if 'alcohol' in personal_dict:
+        data_dict.update({'alcohol': const.smoking_alcohol_id[personal_dict['alcohol']]})
     if 'graduation' in data_dict and data_dict['graduation'] == 0:
         data_dict.pop('graduation')
     for info in const.useless_info:

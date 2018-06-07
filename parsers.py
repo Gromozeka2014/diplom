@@ -9,11 +9,11 @@ import time
 def parse_group_member_ids(group_id):
     conf = file_handler.pars_secure_config()
     api = vk_requests.create_api(service_token=conf.get('app', 'token'), interactive=True)
-    count = api.groups.getMembers(group_id=group_id, count=0)
-    count = count['count']
-    count_n = (count // 1000)
-    ids_list = []
     try:
+        count = api.groups.getMembers(group_id=group_id, count=0)
+        count = count['count']
+        count_n = (count // 1000)
+        ids_list = []
         for i in range(count_n + 1):
             ids = api.groups.getMembers(group_id=group_id, count=1000, offset=1000*i)
             ids_list = ids_list + ids['items']
@@ -64,7 +64,8 @@ def parse_users_posts_count(n):
             if "error_code=18" in e.__str__():
                 print(e)
             elif "error_code=6" in e.__str__():
-                time.sleep(1)
+                print(e)
+                time.sleep(2)
                 request_for_posts_count(api, user, n)
             else:
                 print(e)
@@ -94,7 +95,7 @@ def parse_users_posts_dict():
             request_for_posts_dict(api, user)
         except Exception as e:
             print(e)
-            time.sleep(1)
+            time.sleep(2)
             request_for_posts_dict(api, user)
 
 
