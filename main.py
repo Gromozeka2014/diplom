@@ -12,7 +12,6 @@ from tkinter.ttk import *
 
 def main():
     def pars_id_group():
-        text.insert(1.0, "Начался сбор данных\n")
         group_list = file_handler.read_file('support_files/group_id.txt')
         parsed = []
         filtered = []
@@ -30,17 +29,14 @@ def main():
         text.insert(1.0, "ID Пользователей из групп собранны!\n")
 
     def pars_users():
-        text.insert(1.0, "Начался сбор данных\n")
         parsers.parse_users_data()
         text.insert(1.0, "Информация о пользователях собранна и добавлена в БД!\n")
 
     def pars_posts_n():
-        text.insert(1.0, "Начался сбор данных\n")
         parsers.parse_users_posts_count(n.get())
         text.insert(1.0, "Посты пользователей обработаны и добавлены в БД!\n")
 
     def pars_posts_dict():
-        text.insert(1.0, "Начался сбор данных\n")
         parsers.parse_users_posts_dict()
         text.insert(1.0, "Посты пользователей обработаны и добавлены в БД!\n")
 
@@ -279,7 +275,6 @@ def main():
         search_frame8.pack(fill=BOTH)
         start_db_search = Button(search_frame8, text="Запуск поиска", command=search_param)
         start_db_search.pack(padx=5, pady=5)
-
 
     root = Tk()
 
