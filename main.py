@@ -277,7 +277,6 @@ def main():
         start_db_search.pack(padx=5, pady=5)
 
     root = Tk()
-
     s = Style()
     s.configure('My.TFrame', background='silver')
     root.title("Приложения для сбора и обработки данных пользователей ВКонтакте")
@@ -306,7 +305,7 @@ def main():
     entry_count.pack(side=LEFT, padx=5, pady=5)
     import_db_manager_btn = Button(frame3, text="Экспорт БД", command=export_db)
     import_db_manager_btn.pack(side=RIGHT, padx=5, pady=5)
-    db_data_remove_btn = Button(frame3, text="Отчистить БД", command=db_data_remove)
+    db_data_remove_btn = Button(frame3, text="Очистить БД", command=db_data_remove)
     db_data_remove_btn.pack(side=RIGHT, padx=5, pady=5)
 
     frame4 = Frame(borderwidth=1)
