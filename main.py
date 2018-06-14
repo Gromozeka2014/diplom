@@ -3,6 +3,7 @@ import parsers
 import db_handler
 
 import os
+import time
 from pymongo import MongoClient
 from tkinter import *
 from tkinter import messagebox as mb
@@ -12,6 +13,7 @@ from tkinter.ttk import *
 
 def main():
     def pars_id_group():
+        start_time = time.time()
         group_list = file_handler.read_file('support_files/group_id.txt')
         parsed = []
         filtered = []
@@ -26,19 +28,26 @@ def main():
         with open('support_files/users_id.txt', 'w') as f:
             for line in filtered:
                 f.write(str(line) + '\n')
-        text.insert(1.0, "ID Пользователей из групп собранны!\n")
+        text.insert(1.0, ("--- %s seconds ---\n" % (time.time() - start_time)))
+        text.insert(1.0, "ID Пользователей из групп собранны! Время сбора:\n")
 
     def pars_users():
+        start_time = time.time()
         parsers.parse_users_data()
-        text.insert(1.0, "Информация о пользователях собранна и добавлена в БД!\n")
+        text.insert(1.0, ("--- %s seconds ---\n" % (time.time() - start_time)))
+        text.insert(1.0, "Информация о пользователях собранна и добавлена в БД! Время сбора:\n")
 
     def pars_posts_n():
+        start_time = time.time()
         parsers.parse_users_posts_count(n.get())
-        text.insert(1.0, "Посты пользователей обработаны и добавлены в БД!\n")
+        text.insert(1.0, ("--- %s seconds ---\n" % (time.time() - start_time)))
+        text.insert(1.0, "Посты пользователей обработаны и добавлены в БД! Время сбора:\n")
 
     def pars_posts_dict():
+        start_time = time.time()
         parsers.parse_users_posts_dict()
-        text.insert(1.0, "Посты пользователей обработаны и добавлены в БД!\n")
+        text.insert(1.0, ("--- %s seconds ---\n" % (time.time() - start_time)))
+        text.insert(1.0, "Посты пользователей обработаны и добавлены в БД! Время сбора:\n")
 
     def start_db_server():
         os.system('db_start.bat')
@@ -117,6 +126,8 @@ def main():
             request = {}
             if name.get() != "":
                 request["first_name"] = name.get()
+            if family_name.get() != "":
+                request["last_name"] = family_name.get()
             if sex_name.get() != "":
                 request["sex"] = sex_name.get()
             if relation_name.get() != "":
@@ -153,6 +164,7 @@ def main():
                 text.insert(1.0, '\n\n')
             text.insert(1.0, " - найдено по данным параметрам\n")
             text.insert(1.0, coll.find(request).count())
+            text.insert(1.0, "\n")
 
         search = Toplevel()
         s_search = Style()
@@ -260,14 +272,14 @@ def main():
         name_label13.pack(side=LEFT, padx=5, pady=5)
         smoke_name = StringVar()
         combobox6 = Combobox(search_frame7, values=[u"резко негативное", u"негативное", u"компромиссное",
-                                                    u"нейтральное", u"положительное", u"саморазвитие"],
+                                                    u"нейтральное", u"положительное"],
                              textvariable=smoke_name, width=20)
         combobox6.pack(side=LEFT, padx=5, pady=5)
         name_label14 = Label(search_frame7, text="Отношение к алкоголю:")
         name_label14.pack(side=LEFT, padx=5, pady=5)
         alcohol_name = StringVar()
         combobox7 = Combobox(search_frame7, values=[u"резко негативное", u"негативное", u"компромиссное",
-                                                    u"нейтральное", u"положительное", u"саморазвитие"],
+                                                    u"нейтральное", u"положительное"],
                              textvariable=alcohol_name, width=20)
         combobox7.pack(side=LEFT, padx=5, pady=5)
 
@@ -279,47 +291,47 @@ def main():
     root = Tk()
     s = Style()
     s.configure('My.TFrame', background='silver')
-    root.title("Приложения для сбора и обработки данных пользователей ВКонтакте")
+    root.title("Приложения для сбора данных пользователей ВКонтакте")
     root.geometry("600x400")
 
     frame1 = Frame(style='My.TFrame', borderwidth=1)
     frame1.pack(fill=BOTH)
-    parse_id_groups_btn = Button(frame1, text="Сбор ID из групп", command=pars_id_group)
+    parse_id_groups_btn = Button(frame1, text="Сбор ID из групп", command=pars_id_group, width=33)
     parse_id_groups_btn.pack(side=LEFT, padx=5, pady=5)
+    start_db_manager_btn = Button(frame1, text="Запуск менеджера БД", command=start_db_manager)
+    start_db_manager_btn.pack(side=RIGHT, padx=5, pady=5)
     start_db_btn = Button(frame1, text="Запуск сервера БД", command=start_db_server)
     start_db_btn.pack(side=RIGHT, padx=5, pady=5)
 
-    frame2 = Frame(borderwidth=1)
+    frame2 = Frame(style='My.TFrame', borderwidth=1)
     frame2.pack(fill=BOTH)
-    users_parser_btn = Button(frame2, text="Сбор информации о пользователях", command=pars_users)
+    users_parser_btn = Button(frame2, text="Сбор анкетной информации", command=pars_users, width=33)
     users_parser_btn.pack(side=LEFT, padx=5, pady=5)
-    start_db_manager_btn = Button(frame2, text="Запуск менеджера БД", command=start_db_manager)
-    start_db_manager_btn.pack(side=RIGHT, padx=5, pady=5)
+    db_data_remove_btn = Button(frame2, text="Очистить БД", command=db_data_remove, width=16)
+    db_data_remove_btn.pack(side=RIGHT, padx=4, pady=5)
+    import_db_manager_btn = Button(frame2, text="Экспорт БД", command=export_db, width=16)
+    import_db_manager_btn.pack(side=RIGHT, padx=5, pady=5)
 
     frame3 = Frame(style='My.TFrame', borderwidth=1)
     frame3.pack(fill=BOTH)
-    n = IntVar()
-    posts_parser_count_btn = Button(frame3, text="Сбор последних N постов", command=pars_posts_n)
-    posts_parser_count_btn.pack(side=LEFT, padx=5, pady=5)
-    entry_count = Entry(frame3, textvariable=n, width=5)
-    entry_count.pack(side=LEFT, padx=5, pady=5)
-    import_db_manager_btn = Button(frame3, text="Экспорт БД", command=export_db)
-    import_db_manager_btn.pack(side=RIGHT, padx=5, pady=5)
-    db_data_remove_btn = Button(frame3, text="Очистить БД", command=db_data_remove)
-    db_data_remove_btn.pack(side=RIGHT, padx=5, pady=5)
-
-    frame4 = Frame(borderwidth=1)
-    frame4.pack(fill=BOTH)
-    posts_parser_dict_btn = Button(frame4, text="Сбор постов по ключевым словам", command=pars_posts_dict)
+    posts_parser_dict_btn = Button(frame3, text="Сбор постов по ключевым словам", command=pars_posts_dict, width=33)
     posts_parser_dict_btn.pack(side=LEFT, padx=5, pady=5)
-    db_find_users_btn = Button(frame4, text="Вывод Users", command=db_find_users)
-    db_find_users_btn.pack(side=RIGHT, padx=5, pady=5)
-    db_find_posts_btn = Button(frame4, text="Вывод Posts", command=db_find_posts)
-    db_find_posts_btn.pack(side=RIGHT, padx=5, pady=5)
-    db_find_posts_btn = Button(frame4, text="Поиск по пользователям", command=db_users_search)
+    db_find_users_btn = Button(frame3, text="Вывод Users", command=db_find_users, width=16)
+    db_find_users_btn.pack(side=RIGHT, padx=4, pady=5)
+    db_find_posts_btn = Button(frame3, text="Вывод Posts", command=db_find_posts, width=16)
     db_find_posts_btn.pack(side=RIGHT, padx=5, pady=5)
 
-    frame5 = Frame(style='My.TFrame', borderwidth=1)
+    frame4 = Frame(style='My.TFrame', borderwidth=1)
+    frame4.pack(fill=BOTH)
+    n = IntVar()
+    posts_parser_count_btn = Button(frame4, text="Сбор последних N постов", command=pars_posts_n, width=25)
+    posts_parser_count_btn.pack(side=LEFT, padx=5, pady=5)
+    entry_count = Entry(frame4, textvariable=n, width=5)
+    entry_count.pack(side=LEFT, padx=5, pady=5)
+    db_find_posts_btn = Button(frame4, text="Поиск пользователей по параметрам", command=db_users_search, width=35)
+    db_find_posts_btn.pack(side=RIGHT, padx=5, pady=5)
+
+    frame5 = Frame(borderwidth=1)
     frame5.pack(fill=BOTH)
     open_file_btn = Button(frame5, text="Открыть", command=insert_text)
     open_file_btn.pack(side=RIGHT, padx=5, pady=5)
